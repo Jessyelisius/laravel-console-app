@@ -21,7 +21,7 @@ class DisplayUsers extends Command
     public function handle()
     {
         // Fetch users with their passwords using pagination
-        $users = UserModel::with('userPassword')->paginate(3); 
+        $users = UserModel::with('userPassword')->paginate(2); 
 
         foreach ($users as $user) {
             $this->info("User: {$user->name}");

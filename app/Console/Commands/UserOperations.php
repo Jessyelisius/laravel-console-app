@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 // use App\Models\User;
 use App\Models\UserModel;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UserOperations extends Command
 {
     // The name and signature of the console command.
@@ -52,11 +54,31 @@ class UserOperations extends Command
 
     private function selectOperation()
     {
-        $users = UserModel::all();
-        $this->info("Displaying all users:");
-        foreach ($users as $user) {
-            $this->line("User ID: {$user->id}, Name: {$user->name}");
-        }
+        $userId = $this->ask('Enter the user ID to get user');
+        $users = UserModel::with('userPassword')->where('id',$userId)->first();
+
+        if (!$users)return $this->error('User not found.');
+
+        $this->info("Displaying the user");
+        $this->info("userId: $users->id");
+
+        $this->info("username: $users->name");
+        $this->info("profilePic: $users->profilePic");
+        $this->info("address: $users->address");
+        $this->info("phone: $users->phone");
+
+        $this->info("
+--------------------------------------------------
+");
+
+        // $this->info("password: $users->password");
+        if($users->userPassword&&count($users->userPassword) > 0){
+            foreach ($users->userPassword as $item) {
+                $this->line("{$item->platform} : $$item->password");
+            }
+         }else{
+            $this->info('no password found.');
+         }
     }
 
     private function updateOperation()
