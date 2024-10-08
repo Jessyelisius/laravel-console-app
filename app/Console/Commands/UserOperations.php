@@ -30,6 +30,7 @@ class UserOperations extends Command
         $this->info("3. Delete");
         $this->info("4. Add/Insert");
 
+
         // Get user input
         $choice = $this->ask('Enter your choice (1-4)');
 
@@ -54,6 +55,18 @@ class UserOperations extends Command
 
     private function selectOperation()
     {
+        $users= UserModel::all();
+
+        $this->info(('---------------------------'));
+        $this->info('id. user');
+
+        foreach ($users as $user) {
+            # code...
+            $this->info("{$user->id}. {$user->name}");
+
+        }
+
+
         $userId = $this->ask('Enter the user ID to get user');
         $users = UserModel::with('userPassword')->where('id',$userId)->first();
 
@@ -66,7 +79,7 @@ class UserOperations extends Command
         $this->info("profilePic: $users->profilePic");
         $this->info("address: $users->address");
         $this->info("phone: $users->phone");
-
+ 
         $this->info("
 --------------------------------------------------
 ");
@@ -74,7 +87,7 @@ class UserOperations extends Command
         // $this->info("password: $users->password");
         if($users->userPassword&&count($users->userPassword) > 0){
             foreach ($users->userPassword as $item) {
-                $this->line("{$item->platform} : $$item->password");
+                $this->line("Platform:: {$item->platform} \nPassword:: $item->password");
             }
          }else{
             $this->info('no password found.');
@@ -84,12 +97,28 @@ class UserOperations extends Command
     private function updateOperation()
     {
         // Example update operation logic
+        // $userId = $this->ask('Enter the user ID to update');
+        //  $user = UserModel::all();return $user;
+        $users= UserModel::all();
+
+        $this->info(('---------------------------'));
+        $this->info('id. user');
+
+        foreach ($users as $user) {
+            # code...
+            $this->info("{$user->id}. {$user->name}");
+
+        }
+            
         $userId = $this->ask('Enter the user ID to update');
         $user = UserModel::find($userId);
-
         if ($user) {
             $newName = $this->ask('Enter the new name');
-            $user->name = $newName;
+            $user->name = $newName; 
+            $newAddress = $this->ask('Enter the new address');
+            $user->address = $newAddress;
+            $newPhone = $this->ask('Enter the new phone');
+            $user->phone = $newPhone;
             $user->save();
             $this->info('User updated successfully.');
         } else {

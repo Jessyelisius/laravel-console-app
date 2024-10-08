@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
        $faker = Faker::create();
 
-       for ($i = 0; $i < 5; $i++) {
+       for ($i = 0; $i < 50; $i++) {
             $user = UserModel::create([
                 'name' => $faker->name,
                 'profilePic' => $faker->imageUrl(),
@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make($faker->password),
             ]);
 
-            for ($x = 0; $x < 50; $x++) {
+            for ($x = 0; $x < 5; $x++) {
                 // Create a related password record
                 PasswordModel::create([
                     'user_id' => $user->id,
